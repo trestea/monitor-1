@@ -5,9 +5,9 @@ ulimit -v unlimited
 ulimit -c unlimited
 
 command="timeout 30 java -Xms100m -Xmx100m -jar ./jmxcmd.jar - localhost:9999"
-for i in `cat /opbin/list`
+for i in $(cat /opbin/list)
 do
-    name=`echo $i | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | awk -F "=" '{print $2}'`
+    name=$(echo $i | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | awk -F "=" '{print $2}')
     result=$($command $i Value 2>&1)
     case $? in
     0)
