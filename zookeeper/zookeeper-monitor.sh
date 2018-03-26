@@ -20,7 +20,7 @@ echo "ZK_received:"$(($received_now-$received_last))
 echo "ZK_sent:"$(($sent_now-$sent_last))
 
 #follower is 0,leader is 1
-timeout 30 echo stat | nc -w 3 $ip $port | awk '{if ($0~"^Mode:.*follower"){print "ZK_mode:1"};if($0~"^Mode:.*leader"){print "ZK_mode:0"};if($0~"^Node count:.*"){print "ZK_node:"$NF}}'
+timeout 30 echo stat | nc -w 3 $ip $port | awk '{if ($0~"^Mode:.*follower"){print "ZK_mode:0"};if($0~"^Mode:.*leader"){print "ZK_mode:1"};if($0~"^Node count:.*"){print "ZK_node:"$NF}}'
 
 
 size=$(timeout 30 find /export/Data/zookeeper/version-2/ -name "snapshot*"  -mtime -1 -type f | xargs ls -lt | head -1| awk '{ print $5}')
