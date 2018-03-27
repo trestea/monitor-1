@@ -6,11 +6,11 @@
 
     以redis为例，通过定期向redis写入一个特定的key:value，用于验证redis的核心功能是否正常
     
-2，1，功能监控，主要检测服务的功能可用性
+2，核心指标监控，主要是针对流量，延时，容量，错误四个方面
 
     以redis为例，通过定期向redis写入一个特定的key:value，用于验证redis的核心功能是否正常
     
-2，核心指标监控，主要是针对流量，延时，容量，错误四个方面
+2，
 
     流量：total_net_input_bytes   total_net_output_bytes  
     
