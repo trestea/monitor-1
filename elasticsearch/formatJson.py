@@ -10,7 +10,7 @@ from pprint import pprint
 import commands
 
 if __name__ == "__main__":
-    (status, output) = commands.getstatusoutput("curl -s  'http://172.19.8.43:9200/_cluster/health'")
+    (status, output) = commands.getstatusoutput("curl -s  'http://localhost:9200/_cluster/health'")
     result = json.loads(output)
     for item in result:
         print(item + ":" + str(result[item]))
