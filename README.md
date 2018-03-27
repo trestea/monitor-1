@@ -8,7 +8,7 @@
     
 2，核心指标监控，主要是针对流量，延时，容量，错误四个方面
 
-    以流量：total_net_input_bytes   total_net_output_bytes
+    流量：total_net_input_bytes   total_net_output_bytes
     
 2，
 
