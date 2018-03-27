@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 # @Time    : 2018/3/26 18:10
 # @Author  : lipeijing
@@ -8,9 +8,17 @@ import os
 import json
 from pprint import pprint
 import commands
+import socket
 
 if __name__ == "__main__":
-    (status, output) = commands.getstatusoutput("curl -s  'http://localhost:9200/_cluster/health'")
-    result = json.loads(output)
-    for item in result:
-        print(item + ":" + str(result[item]))
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    try:
+        url = 'http://{ip}:9200/_cluster/health'.format(ip=ip)
+        cmd = 'curl -s "{url}"'.format(url=url)
+        (status, output) = commands.getstatusoutput(cmd)
+        result = json.loads(output)
+        for item in result:
+            print item + ":" + str(result[item])
+    except Exception as e:
+        print e
