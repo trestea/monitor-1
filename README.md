@@ -4,6 +4,8 @@
 
 1，功能监控，主要检测服务的功能可用性
 
+    流量：total_net_input_bytes   total_net_output_bytes
+
     redis：通过定期向redis写入一个特定的key:value，用于验证redis的核心功能是否正常，且该key的过期时间小于定期写入的时间
     
 2，核心指标监控，主要是针对流量，延时，容量，错误四个方面
