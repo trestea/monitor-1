@@ -10,7 +10,7 @@
 
     流量：total_net_input_bytes   total_net_output_bytes
     
-2，
+    流量：total_net_input_bytes   total_net_output_bytes
 
       
     
