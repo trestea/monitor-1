@@ -11,5 +11,3 @@
     流量：total_net_input_bytes   total_net_output_bytes  
     
     容量：used_memory     used_cpu_user
-    
-  
