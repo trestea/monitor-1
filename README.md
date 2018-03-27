@@ -7,3 +7,9 @@
     以redis为例，通过定期向redis写入一个特定的key:value，用于验证redis的核心功能是否正常
     
 2，核心指标监控，主要是针对流量，延时，容量，错误四个方面
+
+    流量：total_net_input_bytes   total_net_output_bytes  
+    
+    容量：used_memory     used_cpu_user
+    
+  
