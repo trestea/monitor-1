@@ -15,7 +15,7 @@ if __name__ == "__main__":
     ip = socket.gethostbyname(hostname)
     try:
         url = 'http://{ip}:9200/_cluster/health'.format(ip=ip)
-        cmd = 'curl -s "{url}"'.format(url=url)
+        cmd = 'curl --connect-timeout 5 -s "{url}"'.format(url=url)
         (status, output) = commands.getstatusoutput(cmd)
         result = json.loads(output)
         for item in result:
