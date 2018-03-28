@@ -28,7 +28,7 @@ def list_dic(dic):
             if isNumber(value):
                 print(name + ":" + str(value))
             else:
-                print(name + ": \"" + value + "\"")
+                print(name + ":\"" + value + "\"")
 
 if __name__ == "__main__":
     hostname = socket.gethostname()
