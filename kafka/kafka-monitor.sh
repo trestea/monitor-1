@@ -4,7 +4,7 @@ ulimit -m unlimited
 ulimit -v unlimited
 ulimit -c unlimited
 
-command="timeout 30 java -Xms100m -Xmx100m -jar ./jmxcmd.jar - 172.19.8.44:9999"
+command="timeout 30 java -Xms100m -Xmx100m -jar ./jmxcmd.jar - localhost:9999"
 for i in $(cat ./list)
 do
     name=$(echo $i | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | awk -F "=" '{print $2}')
