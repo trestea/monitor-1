@@ -1,15 +1,19 @@
 #!/usr/bin/python
-# coding=utf-8
 # @Time    : 2018/3/27 18:10
 # @Author  : lipeijing
 # @Email   : lipeijing@jd.com
 
-from __future__ import unicode_literals
 import os
 import json
 from pprint import pprint
 import commands
 import socket
+import fcntl
+import struct
+
+def getip(ethname):
+    s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0X8915, struct.pack('256s', ethname[:15]))[20:24])
 
 def isNumber(item):
     try:
@@ -33,8 +37,13 @@ def list_dic(dic):
 if __name__ == "__main__":
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
-    url = 'http://{ip}:9200/_cluster/health'.format(ip=ip)
-    cmd = 'curl -s "{url}"'.format(url=url)
-    (status, output) = commands.getstatusoutput(cmd)
-    result = json.loads(output)
-    list_dic(result)
+    if ip == '127.0.0.1':
+        ip = str(getip('eth0'))
+    try:
+        url = 'http://{ip}:9200/_cluster/health'.format(ip=ip)
+        cmd = 'curl -s "{url}"'.format(url=url)
+        (status, output) = commands.getstatusoutput(cmd)
+        result = json.loads(output)
+        list_dic(result)
+    except Exception as e:
+        print e
