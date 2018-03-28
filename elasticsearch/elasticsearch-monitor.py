@@ -14,6 +14,8 @@ import socket
 def isNumber(item):
     try:
         float(item)
+        if type(item) == bool:
+            return False
         return True
     except Exception as e:
         return False
