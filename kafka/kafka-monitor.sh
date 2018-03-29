@@ -29,9 +29,9 @@ do
     echo ${name} ": "${result}
     ;;
     *)
-    echo "ScriptStauts : 1"
+    echo "ScriptStatus : 1"
     exit 1
     ;;
     esac
 done
-echo  "ScriptStauts : 0"
+echo  "ScriptStatus : 0"
