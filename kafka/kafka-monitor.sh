@@ -14,6 +14,8 @@ for i in $(cat $LIST)
 do
     name=$(echo $i | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | awk -F "=" '{print $2}')
     result=$($command $i 2>&1)
+    case $? in
+    0)
     case ${result} in
     *Value*)
     result=$($command $i Value 2>&1 | cut -d ":" -f4|sed 's/^[ \t]*//g')
@@ -25,4 +27,11 @@ do
     result="参数错误!"
     esac
     echo ${name} ": "${result}
+    ;;
+    *)
+    echo "ScriptStauts : 1"
+    exit 1
+    ;;
+    esac
 done
+echo  "ScriptStauts : 0"
