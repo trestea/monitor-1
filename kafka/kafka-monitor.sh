@@ -23,6 +23,9 @@ do
     *OneMinuteRate*)
     result=$($command $i OneMinuteRate 2>&1 | cut -d ":" -f4| sed 's/^[ \t]*//g')
     ;;
+    *99thPercentile*)
+    result=$($command $i 99thPercentile 2>&1 | cut -d ":" -f4| sed 's/^[ \t]*//g')
+    ;;
     *)
     result="参数错误!"
     esac
