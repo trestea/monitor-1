@@ -26,6 +26,7 @@ do
     *)
     result="参数错误!"
     esac
+    result=${result:0:5}
     echo ${name} ": "${result}
     ;;
     *)
