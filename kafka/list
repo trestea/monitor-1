@@ -11,3 +11,4 @@ kafka.server:name=LeaderCount,type=ReplicaManager
 kafka.server:name=FailedFetchRequestsPerSec,type=BrokerTopicMetrics
 kafka.server:name=FailedProduceRequestsPerSec,type=BrokerTopicMetrics
 kafka.server:name=BytesRejectedPerSec,type=BrokerTopicMetrics
+kafka.network:type=RequestMetrics,name=TotalTimeMs,request=Fetch
