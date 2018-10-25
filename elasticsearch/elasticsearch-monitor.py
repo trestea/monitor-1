@@ -1,49 +1,62 @@
-#!/usr/bin/python
-# @Time    : 2018/3/27 18:10
-# @Author  : lipeijing
-# @Email   : lipeijing@jd.com
-
+import time
 import os
-import json
-from pprint import pprint
-import commands
-import socket
-import fcntl
-import struct
+import requests
+import datetime
+from modules import base
+import log
 
-def getip(ethname):
-    s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0X8915, struct.pack('256s', ethname[:15]))[20:24])
 
-def isNumber(item):
-    try:
-        float(item)
-        if type(item) == bool:
-            return False
-        return True
-    except Exception as e:
-        return False
+class monitor(base.monitor):
+	def __init__(self, **kw):
+		#super().__init__(**kw)
+		self.addr = kw['addr']
+		self.index_name = kw['index']
 
-def list_dic(dic):
-    for name, value in dic.items():
-        if isinstance(value, dict):
-            list_dic(value)
-        else:
-            if isNumber(value):
-                print(name + ":" + str(value))
-            else:
-                print(name + ":\"" + str(value) + "\"")
+	def read(self):
+		status = 0
+		interval = 0
+		desc = ''
+		index_name = self.index_name + '-' + datetime.datetime.now().strftime('%Y%m%d%H')
+		try:
+			url = os.path.join(self.addr,'%s/type_blog/id_123' %index_name)
+			res = requests.get(url)
+			timestamp = res.json()['_source']['doc']['timestamp']
+			interval = time.time() - timestamp
+			status = 100
+		except Exception as e:
+			log.exception(e)
+			status = 0
+			desc = "ES ERROR %s" %e
+		return base.metric('status',status,desc=desc),base.metric('interval',interval)
 
-if __name__ == "__main__":
-    hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
-    if ip == '127.0.0.1':
-        ip = str(getip('eth0'))
-    try:
-        url = 'http://{ip}:9200/_cluster/health'.format(ip=ip)
-        cmd = 'curl -s "{url}"'.format(url=url)
-        (status, output) = commands.getstatusoutput(cmd)
-        result = json.loads(output)
-        list_dic(result)
-    except Exception as e:
-        print e
+
+	def write(self):
+		status = 0
+		desc = ''
+		index_name = self.index_name + '-' + (datetime.datetime.now() + datetime.timedelta(seconds=120)).strftime('%Y%m%d%H')
+		last_index = self.index_name + '-' + (datetime.datetime.now() - datetime.timedelta(seconds=7200)).strftime('%Y%m%d%H')
+		try:
+			url = os.path.join(self.addr, '%s/type_blog/id_123' %index_name)
+			doc = {'doc': {'timestamp': time.time()}}
+			res = requests.post(url, json=doc)
+			res_json = res.json()
+			if res.status_code < 300 and 'result' in res_json and res_json['result'] in ('updated','created'):
+				log.info('%s index:%s' %(res_json['result'],index_name))
+				# 创建新index时删除旧index
+				if res_json['result'] == 'created':
+					# 失败重试3次
+					i = 0
+					while True:
+						i += 1
+						res = requests.delete(os.path.join(self.addr, last_index))
+						if (i > 3) or (res.status_code == 200 and 'acknowledged' in res.json() and res.json()['acknowledged']):
+							break
+				status = 100
+			else:
+				log.error('write fail, header:%s, body:%s' %(str(res.headers),res.content))
+		except Exception as e:
+			log.exception(e)
+			status = 0
+			desc = "ES ERROR %s" %e
+		status = float(status)
+		return base.metric('status',status,desc=desc),
